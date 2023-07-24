@@ -1,19 +1,19 @@
 import CardProduct from "../components/Fragment/CardProduct";
 import Button from "../components/Elements/Button";
-import Counter from "../components/Fragment/Counter";
+import { useState } from "react";
 
 const products = [
   {
     id: 1,
     name: "Keyboard",
-    price: "Rp.1000.000",
+    price: 1000000,
     image: "/img/product-1.jpg",
     description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo pariatur laudantium id quisquam error odit nostrum veritatis at corrupti omnis voluptatum, repellat repellendus! Eveniet eos consectetur aperiam accusantium rem fuga.`
   },
   {
     id: 2,
     name: "Logitech MX Key",
-    price: "Rp.1.200.000",
+    price: 1200000,
     image: "/img/product-1.jpg",
     description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo pariatur laudantium id quisquam error odit nostrum veritatis `
   }
@@ -21,6 +21,19 @@ const products = [
 
 const email = localStorage.getItem("email");
 const ProductsPage = () => {
+  const [cart, setCart] = useState([{ id: 2, qty: 1 }]);
+
+  const handleAddToCart = (id) => {
+    if (cart.find((item) => item.id === id)) {
+      setCart(
+        cart.map((item) =>
+          item.id === id ? { ...item, qty: item.qty + 1 } : item
+        )
+      );
+    } else {
+      setCart([...cart, { id, qty: 1 }]);
+    }
+  };
   const handleLogout = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("password");
@@ -35,21 +48,64 @@ const ProductsPage = () => {
         </Button>
       </div>
       <div className="flex justify-center py-5">
-        {products.map((product) => (
-          <CardProduct key={product.id}>
-            <CardProduct.Header image={product.image} />
-            <CardProduct.Body name={product.name}>
-              {product.description}
-            </CardProduct.Body>
-            <CardProduct.Footer price={product.price} />
-          </CardProduct>
-        ))}
-      </div>
-      <div className="flex justify-center py-5">
-        <Counter />
+        <div className="w-3/4 flex flex-wrap">
+          {products.map((product) => (
+            <CardProduct key={product.id}>
+              <CardProduct.Header image={product.image} />
+              <CardProduct.Body name={product.name}>
+                {product.description}
+              </CardProduct.Body>
+              <CardProduct.Footer
+                price={product.price}
+                id={product.id}
+                handleAddToCart={handleAddToCart}
+              />
+            </CardProduct>
+          ))}
+        </div>
+        <div className="w-1/2 mx-auto">
+          <h1 className="text-3xl font-bold text-blue-600 mb-2">Cart</h1>
+          <table className="w-full text-left table-auto border-collapse border border-gray-600">
+            <thead>
+              <tr>
+                <th className="border border-gray-600 px-4 py-2">Product</th>
+                <th className="border border-gray-600 px-4 py-2">Price</th>
+                <th className="border border-gray-600 px-4 py-2">Quantity</th>
+                <th className="border border-gray-600 px-4 py-2">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((item) => {
+                const product = products.find(
+                  (product) => product.id === item.id
+                );
+                return (
+                  <tr key={item.id}>
+                    <td className="border border-gray-600 px-4 py-2">
+                      {product.name}
+                    </td>
+                    <td className="border border-gray-600 px-4 py-2">
+                      Rp {product.price.toLocaleString()}
+                    </td>
+                    <td className="border border-gray-600 px-4 py-2">
+                      {item.qty}
+                    </td>
+                    <td className="border border-gray-600 px-4 py-2">
+                      {typeof product.price === "number" &&
+                      !isNaN(product.price) &&
+                      typeof item.qty === "number" &&
+                      !isNaN(item.qty)
+                        ? `Rp. ${(product.price * item.qty).toLocaleString()}`
+                        : "Invalid price or quantity"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
 };
-
 export default ProductsPage;
