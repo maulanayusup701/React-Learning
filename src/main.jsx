@@ -3,9 +3,9 @@ import ReactDOM from "react-dom/client";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import ErrorPage from "./pages/404";
-import Products from "./pages/products";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProductsPage from "./pages/Products";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/products",
-    element: <Products />
+    element: <ProductsPage />
   }
 ]);
 
