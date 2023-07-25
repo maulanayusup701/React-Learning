@@ -1,6 +1,6 @@
 import CardProduct from "../components/Fragment/CardProduct";
 import Button from "../components/Elements/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const products = [
   {
@@ -36,6 +36,13 @@ const ProductsPage = () => {
       setTotalPrice(sum);
       localStorage.setItem("cart", JSON.stringify(cart));
     }
+  }, [cart]);
+
+  const totalPriceRef = useRef(null);
+  useEffect(() => {
+    cart.length > 0
+      ? (totalPriceRef.current.style.display = "table-row")
+      : (totalPriceRef.current.style.display = "none");
   }, [cart]);
 
   const handleAddToCart = (id) => {
@@ -116,7 +123,7 @@ const ProductsPage = () => {
                   </tr>
                 );
               })}
-              <tr>
+              <tr ref={totalPriceRef}>
                 <td className="border border-gray-600 px-4 py-2" colSpan={3}>
                   <b>Total Price</b>
                 </td>
