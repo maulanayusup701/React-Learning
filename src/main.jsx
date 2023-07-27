@@ -4,6 +4,7 @@ import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 import ErrorPage from "./pages/404";
 import ProfilePage from "./pages/profile";
+import DetailProductPage from "./pages/detailProduct";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProductsPage from "./pages/Products";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />
+  },
+  {
+    path: "/product/:id",
+    element: <DetailProductPage />
   }
 ]);
 
